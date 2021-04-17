@@ -21,10 +21,16 @@ module.exports = {
     if(password.length > 50) {
       errors.push('Senha muito grande.')
     }
-    if(errors.length > 0) {
-      return result(errors, userCreated)
+
+    const userFound = await userRepository.findByEmail(email)
+    if(userFound) {
+      errors.push('Usuário já cadastrado.')
     }
 
+    if(errors.length > 0) {
+      return result(errors, null)
+    }
+    
     const userCreated = await userRepository.insert({name, email, password})
     return result(errors, userCreated)
   }

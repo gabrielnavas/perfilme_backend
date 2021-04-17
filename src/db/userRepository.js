@@ -1,7 +1,7 @@
 const {clientConnection} = require('./connection')
 
 module.exports = {
-  insert: async user => {
+  insert: user => {
     const sql = `
       INSERT INTO perfilme.user
         (name, password, email)
@@ -11,6 +11,18 @@ module.exports = {
         id, name, password, email;
     `
     const params = [user.name, user.password, user.email]
-    return await clientConnection.one(sql, params)
+    return clientConnection.one(sql, params)
+  },
+
+  findByEmail: email => {
+    const sql = `
+      SELECT 
+        id, name, password, email
+      FROM 
+        perfilme.user
+      WHERE email = $1;
+    `
+    const param = [email]
+    return clientConnection.oneOrNone(sql ,param)
   }
 }

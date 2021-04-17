@@ -16,10 +16,10 @@ route.post('/user', async (req,res) => {
     password: req.body.password
   })
   if(errors.length > 0) {
-    return res.status(400).json(error)
+    return res.status(400).json(errors)
   }
 
-  res.status(200).json(userCreated)
+  res.status(201).json(userCreated)
 })
 
 module.exports = route
