@@ -4,8 +4,10 @@ const userRepository = require('../db/userRepository')
 const result = (errors, userCreated) => ({errors, userCreated})
 
 module.exports = {
-  create: async ({name, email, password}) => {
+  create: async ({name, email, password, passwordConfirmation}) => {
     const errors = []
+    const maxPassword = 50
+    const minPassword = 6
     if(name.length < 2) {
       errors.push('Nome muito pequeno.')
     }
@@ -15,11 +17,20 @@ module.exports = {
     if(!isEmail(email)) {
       errors.push('Email inválido.')
     }
-    if(password.length < 6) {
+    if(password.length < minPassword) {
       errors.push('Senha muito pequena.')
     }    
-    if(password.length > 50) {
+    if(password.length > maxPassword) {
       errors.push('Senha muito grande.')
+    }    
+    if(passwordConfirmation.length < minPassword) {
+      errors.push('Confirmação de senha muito pequena.')
+    }    
+    if(passwordConfirmation.length > maxPassword) {
+      errors.push('Confirmação de senha muito grande.')
+    }    
+    if(password !== passwordConfirmation) {
+      errors.push('Senha está diferente da confirmação de senha.')
     }
 
     const userFound = await userRepository.findByEmail(email)
