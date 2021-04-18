@@ -30,8 +30,6 @@ describe('User Post', () => {
     expect(typeof response.body.id).toEqual('number')
     expect(response.body.name).toEqual(user.name)
     expect(response.body.email).toEqual(user.email)
-    expect(typeof response.body.password).toEqual('string')
-    expect(response.body.password.length).toBeGreaterThan(50)
   })
     
   test('should error if name is small', async () => {
