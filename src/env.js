@@ -12,5 +12,8 @@ module.exports = {
     database: process.env.DATABASE_NAME || 'postgres',
     userName: process.env.DATABASE_USER_NAME || 'postgres',
     password: process.env.DATABASE_PASSWORD || '123'
+  },
+  auth: {
+    privateKey: process.env.AUTH_PRIVATE_KEY || 'iamprivatekey123!'
   }
 }

@@ -1,7 +1,7 @@
 const {clientConnection} = require('./connection')
 
 module.exports = {
-  insert: user => {
+  insert: ({name, password, email}) => {
     const sql = `
       INSERT INTO perfilme.user
         (name, password, email)
@@ -10,7 +10,7 @@ module.exports = {
       RETURNING 
         id, name, password, email;
     `
-    const params = [user.name, user.password, user.email]
+    const params = [name, password, email]
     return clientConnection.one(sql, params)
   },
 

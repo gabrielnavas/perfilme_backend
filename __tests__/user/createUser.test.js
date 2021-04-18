@@ -4,8 +4,11 @@ const app = require('../../src/app')
 const { clientConnection } = require('../../src/infra/db/connection')
 
 describe('User Post', () => {
+  let request
+
   beforeEach(async () => {
     await clientConnection.none('DELETE FROM perfilme.user;')
+    request = supertest(app)
   })
 
   afterAll(async () => {
@@ -19,7 +22,7 @@ describe('User Post', () => {
       password: '123456',
       passwordConfirmation: '123456',
     }
-    const response = await supertest(app)
+    const response = await request
       .post('/user')
       .send(user)
     expect(response.status).toBe(201)
@@ -38,7 +41,7 @@ describe('User Post', () => {
       password: '123456',
       passwordConfirmation: '123456',
     }
-    const response = await supertest(app)
+    const response = await request
       .post('/user')
       .send(user)
     expect(response.status).toBe(400)
@@ -53,7 +56,7 @@ describe('User Post', () => {
       password: '123456',
       passwordConfirmation: '123456',
     }
-    const response = await supertest(app)
+    const response = await request
       .post('/user')
       .send(user)
     expect(response.status).toBe(400)
@@ -68,7 +71,7 @@ describe('User Post', () => {
       password: bigPassword,
       passwordConfirmation: bigPassword,
     }
-    const response = await supertest(app)
+    const response = await request
       .post('/user')
       .send(user)
     expect(response.status).toBe(400)
@@ -85,7 +88,7 @@ describe('User Post', () => {
       password: '12345',
       passwordConfirmation: '12345',
     }
-    const response = await supertest(app)
+    const response = await request
       .post('/user')
       .send(user)
     expect(response.status).toBe(400)
@@ -103,7 +106,7 @@ describe('User Post', () => {
       password: bigPasswordConfirmation,
       passwordConfirmation: bigPasswordConfirmation
     }
-    const response = await supertest(app)
+    const response = await request
       .post('/user')
       .send(user)
     expect(response.status).toBe(400)
@@ -120,7 +123,7 @@ describe('User Post', () => {
       password: '12345',
       passwordConfirmation: '12345'
     }
-    const response = await supertest(app)
+    const response = await request
       .post('/user')
       .send(user)
     expect(response.status).toBe(400)
@@ -137,7 +140,7 @@ describe('User Post', () => {
       password: '123456',
       passwordConfirmation: '654321'
     }
-    const response = await supertest(app)
+    const response = await request
       .post('/user')
       .send(user)
     expect(response.status).toBe(400)
@@ -151,8 +154,8 @@ describe('User Post', () => {
       password: '123456',
       passwordConfirmation: '123456'
     }
-    await supertest(app).post('/user').send(user)
-    const response = await supertest(app).post('/user').send(user)
+    await request.post('/user').send(user)
+    const response = await request.post('/user').send(user)
     expect(response.status).toBe(400)
     expect(response.body).toEqual(["Usuário já cadastrado."])
   })
