@@ -1,7 +1,7 @@
 const supertest = require('supertest')
 const app = require('../../src/app')
 
-const { clientConnection } = require('../../src/db/connection')
+const { clientConnection } = require('../../src/infra/db/connection')
 
 test('should create a user', async () => {
   await clientConnection.none('DELETE FROM perfilme.user;')

@@ -1,6 +1,6 @@
 const route = require('express').Router()
 
-const userUsecase = require('../usecases/userUsecase')
+const userUsecase = require('../../usecases/userUsecase')
 
 route.post('/user', async (req,res) => {
 

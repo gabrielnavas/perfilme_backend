@@ -1,5 +1,5 @@
-const {isEmail} =require('../validators')
-const userRepository = require('../db/userRepository')
+const { isEmail } = require('../infra/validators')
+const userRepository = require('../infra/db/userRepository')
 
 const resultCreate = (errors, userCreated) => ({errors, userCreated})
 

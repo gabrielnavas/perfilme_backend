@@ -1,5 +1,5 @@
 const pg = require('pg-promise')
-const env = require('../env')
+const env = require('../../env')
 
 
 const pgp = pg({})({
