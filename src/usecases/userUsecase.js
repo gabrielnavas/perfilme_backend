@@ -1,5 +1,6 @@
 const { isEmail } = require('../infra/validators')
 const userRepository = require('../infra/db/userRepository')
+const { hash } = require('../infra/hashs')
 
 const resultCreate = (errors, userCreated) => ({errors, userCreated})
 
@@ -41,8 +42,13 @@ module.exports = {
     if(errors.length > 0) {
       return resultCreate(errors, null)
     }
-    
-    const userCreated = await userRepository.insert({name, email, password})
+
+    const userCreated = await userRepository
+      .insert({
+        name, 
+        email, 
+        password: await hash(password)
+      })
     return resultCreate(errors, userCreated)
   }
 }
