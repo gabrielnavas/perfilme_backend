@@ -1,7 +1,7 @@
 const {isEmail} =require('../validators')
 const userRepository = require('../db/userRepository')
 
-const result = (errors, userCreated) => ({errors, userCreated})
+const resultCreate = (errors, userCreated) => ({errors, userCreated})
 
 module.exports = {
   create: async ({name, email, password, passwordConfirmation}) => {
@@ -39,10 +39,10 @@ module.exports = {
     }
 
     if(errors.length > 0) {
-      return result(errors, null)
+      return resultCreate(errors, null)
     }
     
     const userCreated = await userRepository.insert({name, email, password})
-    return result(errors, userCreated)
+    return resultCreate(errors, userCreated)
   }
 }
