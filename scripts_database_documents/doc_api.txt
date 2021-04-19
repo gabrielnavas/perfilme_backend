@@ -1,0 +1,45 @@
+Routes:
+  
+  Route path: /user
+  Objective: Create an user
+  Params:
+    body: {
+      name: string,
+      email: string,
+      password: string,
+      passwordConfirmation: string,
+    }
+  Result:
+    ok:
+      status: 201
+      body: {
+        id: number,
+        name: string,
+        email: string
+      }
+    usecase errors:
+      status: 400
+      body: []
+    missing params errors:
+      status: 400
+      body: []
+
+  Route path: /auth
+  Objective: Create a login token
+  Params:
+    body: {
+      email: string,
+      password: string,
+    }
+  Result:
+    ok:
+      status: 201
+      body: {
+        token: string,
+      }
+    usecase errors:
+      status: 400
+      body: []
+    missing params errors:
+      status: 400
+      body: []
