@@ -3,7 +3,7 @@ const app = require('../../src/app')
 
 const { clientConnection } = require('../../src/infra/db/connection')
 
-describe('User Post', () => {
+describe('Create a User', () => {
   let request
 
   beforeEach(async () => {
@@ -15,7 +15,7 @@ describe('User Post', () => {
     await clientConnection.none('DELETE FROM perfilme.user;')
   })
 
-  test('should create a user', async () => {
+  test('should return 201 and user created', async () => {
     const user = {
       name: 'gabriel',
       email: 'gabriel@email.com',
@@ -25,13 +25,28 @@ describe('User Post', () => {
     const response = await request
       .post('/user')
       .send(user)
+    const userCreated = response.body
     expect(response.status).toBe(201)
-    expect(response.body.id).toBeGreaterThan(0)
-    expect(typeof response.body.id).toEqual('number')
-    expect(response.body.name).toEqual(user.name)
-    expect(response.body.email).toEqual(user.email)
+    expect(userCreated.id).toBeGreaterThan(0)
+    expect(typeof userCreated.id).toEqual('number')
+    expect(userCreated.name).toEqual(user.name)
+    expect(userCreated.email).toEqual(user.email)
   })
-    
+})
+
+
+describe('Check usecase errors, returning status 400 and erros list', () => {
+  let request
+
+  beforeEach(async () => {
+    await clientConnection.none('DELETE FROM perfilme.user;')
+    request = supertest(app)
+  })
+
+  afterAll(async () => {
+    await clientConnection.none('DELETE FROM perfilme.user;')
+  })
+
   test('should error if name is small', async () => {
     const user = {
       name: 'g',
@@ -158,3 +173,71 @@ describe('User Post', () => {
     expect(response.body).toEqual(["Usuário já cadastrado."])
   })
 })
+
+
+describe('Check body missing params errors, returning status 400 and erros list', () => {
+  let request
+
+  beforeEach(async () => {
+    await clientConnection.none('DELETE FROM perfilme.user;')
+    request = supertest(app)
+  })
+
+  afterAll(async () => {
+    await clientConnection.none('DELETE FROM perfilme.user;')
+  })
+
+  test('should error if name is small', async () => {
+    const user = {
+      email: 'gabriel@email.com',
+      password: '123456',
+      passwordConfirmation: '123456',
+    }
+    const response = await request
+      .post('/user')
+      .send(user)
+    expect(response.status).toBe(400)
+    expect(response.body).toEqual(["missing param: name"])
+  })
+  
+  test('should error if name is great', async () => {
+    const user = {
+      name: 'any_name',
+      password: '123456',
+      passwordConfirmation: '123456',
+    }
+    const response = await request
+      .post('/user')
+      .send(user)
+    expect(response.status).toBe(400)
+    expect(response.body).toEqual(["missing param: email"])
+  })
+
+  test('should error if name is great', async () => {
+    const user = {
+      name: 'any_name',
+      email: 'any_email@email.com',
+      passwordConfirmation: '123456',
+    }
+    const response = await request
+      .post('/user')
+      .send(user)
+    expect(response.status).toBe(400)
+    expect(response.body).toEqual(["missing param: password"])
+  })
+
+  test('should error if name is great', async () => {
+    const user = {
+      name: 'any_name',
+      email: 'any_email@email.com',
+      password: '123456',
+    }
+    const response = await request
+      .post('/user')
+      .send(user)
+    expect(response.status).toBe(400)
+    expect(response.body).toEqual(["missing param: passwordConfirmation"])
+  })
+  
+})
+

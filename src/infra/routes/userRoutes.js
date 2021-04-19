@@ -3,10 +3,14 @@ const route = require('express').Router()
 const userUsecase = require('../../usecases/userUsecase')
 
 route.post('/user', async (req,res) => {
+  const bodyMissingParamsErrors = []
   for (const param of ['name', 'email', 'password', 'passwordConfirmation']) {
     if(req.body[param] === undefined) {
-      return res.status(400).json([`missing param: ${param}`])
+      bodyMissingParamsErrors.push(`missing param: ${param}`)
     }
+  }
+  if(bodyMissingParamsErrors.length > 0) {
+    return res.status(400).json(bodyMissingParamsErrors)
   }
   const {errors, userCreated} = await userUsecase.create({
     name: String(req.body.name), 
