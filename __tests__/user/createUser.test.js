@@ -179,12 +179,7 @@ describe('Check body missing params errors, returning status 400 and erros list'
   let request
 
   beforeEach(async () => {
-    await clientConnection.none('DELETE FROM perfilme.user;')
     request = supertest(app)
-  })
-
-  afterAll(async () => {
-    await clientConnection.none('DELETE FROM perfilme.user;')
   })
 
   test('should error if name is small', async () => {
