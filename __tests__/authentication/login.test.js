@@ -3,7 +3,7 @@ const app = require('../../src/app')
 const { clientConnection } = require('../../src/infra/db/connection')
 const userRepository = require('../../src/infra/db/userRepository')
 
-describe('Check usecase errors', () => {
+describe('Check usecase errors, returning status 400 and erros list', () => {
   let request
   let userCreated
   
@@ -89,4 +89,28 @@ describe('Create a token with email and password', () => {
   })
 })
 
+describe('Check body missing params errors, returning status 400 and erros list', () => {
+  let request
+  
+  beforeAll(async () => {
+    request = supertest(app)
+  })
 
+  test('should return errors if email is wrong', async () => {
+    const params = {
+      password: '123456'
+    }
+    const response = await request.post('/auth').send(params)
+    expect(response.status).toEqual(400)
+    expect(response.body).toEqual(['missing param: email'])
+  })
+
+  test('should return an error if password length is small', async () => {
+    const params = {
+      email: 'any_wrong_email@email.com',
+    }
+    const response = await request.post('/auth').send(params)
+    expect(response.status).toEqual(400)
+    expect(response.body).toEqual(['missing param: password'])
+  })
+})
