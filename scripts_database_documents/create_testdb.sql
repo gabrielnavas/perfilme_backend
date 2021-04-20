@@ -21,7 +21,7 @@ COMMENT ON DATABASE postgres IS E'default administrative connection database';
 
 
 -- object: perfilme | type: SCHEMA --
--- DROP SCHEMA IF EXISTS perfilme CASCADE;
+DROP SCHEMA IF EXISTS perfilme CASCADE;
 CREATE SCHEMA perfilme;
 -- ddl-end --
 ALTER SCHEMA perfilme OWNER TO postgres;
@@ -31,8 +31,8 @@ SET search_path TO pg_catalog,public,perfilme;
 -- ddl-end --
 
 -- object: public.user_id_seq | type: SEQUENCE --
--- DROP SEQUENCE IF EXISTS public.user_id_seq CASCADE;
-CREATE SEQUENCE public.user_id_seq
+-- DROP SEQUENCE IF EXISTS perfilme.user_id_seq CASCADE;
+CREATE perfilme.user_id_seq
 	INCREMENT BY 1
 	MINVALUE 1
 	MAXVALUE 2147483647
@@ -42,18 +42,21 @@ CREATE SEQUENCE public.user_id_seq
 	OWNED BY NONE;
 
 -- ddl-end --
-ALTER SEQUENCE public.user_id_seq OWNER TO postgres;
+ALTER perfilme.user_id_seq OWNER TO postgres;
 -- ddl-end --
 
 -- object: perfilme."user" | type: TABLE --
 -- DROP TABLE IF EXISTS perfilme."user" CASCADE;
 CREATE TABLE perfilme."user" (
-	id integer NOT NULL DEFAULT nextval('public.user_id_seq'::regclass),
+	id serial NOT NULL,
 	name character varying(80) NOT NULL,
 	description character varying(255),
 	photo_path character varying(500),
 	password character varying(100) NOT NULL,
 	email character varying(80) NOT NULL,
+	username varchar(60) NOT NULL,
+	created_at timestamp NOT NULL,
+	update_at timestamp,
 	CONSTRAINT user_pk PRIMARY KEY (id)
 
 );
@@ -62,8 +65,8 @@ ALTER TABLE perfilme."user" OWNER TO postgres;
 -- ddl-end --
 
 -- object: public.links_id_seq | type: SEQUENCE --
--- DROP SEQUENCE IF EXISTS public.links_id_seq CASCADE;
-CREATE SEQUENCE public.links_id_seq
+-- DROP SEQUENCE IF EXISTS perfilme.links_id_seq CASCADE;
+CREATE perfilme.links_id_seq
 	INCREMENT BY 1
 	MINVALUE 1
 	MAXVALUE 2147483647
@@ -73,13 +76,13 @@ CREATE SEQUENCE public.links_id_seq
 	OWNED BY NONE;
 
 -- ddl-end --
-ALTER SEQUENCE public.links_id_seq OWNER TO postgres;
+ALTER perfilme.links_id_seq OWNER TO postgres;
 -- ddl-end --
 
 -- object: perfilme.links | type: TABLE --
 -- DROP TABLE IF EXISTS perfilme.links CASCADE;
 CREATE TABLE perfilme.links (
-	id integer NOT NULL DEFAULT nextval('public.links_id_seq'::regclass),
+	id serial NOT NULL,
 	custom_name character varying NOT NULL,
 	code_type_link integer NOT NULL,
 	id_user integer NOT NULL,
@@ -91,8 +94,8 @@ ALTER TABLE perfilme.links OWNER TO postgres;
 -- ddl-end --
 
 -- object: public.type_link_code_seq | type: SEQUENCE --
--- DROP SEQUENCE IF EXISTS public.type_link_code_seq CASCADE;
-CREATE SEQUENCE public.type_link_code_seq
+-- DROP SEQUENCE IF EXISTS perfilme.type_link_code_seq CASCADE;
+CREATE perfilme.type_link_code_seq
 	INCREMENT BY 1
 	MINVALUE 1
 	MAXVALUE 2147483647
@@ -102,13 +105,13 @@ CREATE SEQUENCE public.type_link_code_seq
 	OWNED BY NONE;
 
 -- ddl-end --
-ALTER SEQUENCE public.type_link_code_seq OWNER TO postgres;
+ALTER perfilme.type_link_code_seq OWNER TO postgres;
 -- ddl-end --
 
 -- object: perfilme.type_link | type: TABLE --
 -- DROP TABLE IF EXISTS perfilme.type_link CASCADE;
 CREATE TABLE perfilme.type_link (
-	code integer NOT NULL DEFAULT nextval('public.type_link_code_seq'::regclass),
+	code serial NOT NULL,
 	name character varying NOT NULL,
 	link character varying NOT NULL,
 	CONSTRAINT type_link_pk PRIMARY KEY (code)
@@ -122,8 +125,8 @@ ALTER TABLE perfilme.type_link OWNER TO postgres;
 -- DROP TABLE IF EXISTS perfilme.authentication_token CASCADE;
 CREATE TABLE perfilme.authentication_token (
 	id serial NOT NULL,
-	token varchar NOT NULL,
 	id_user integer NOT NULL,
+	token varchar NOT NULL,
 	CONSTRAINT authentication_token_pk PRIMARY KEY (id)
 
 );
@@ -163,3 +166,5 @@ GRANT CREATE,USAGE
    ON SCHEMA public
    TO PUBLIC;
 -- ddl-end --
+
+

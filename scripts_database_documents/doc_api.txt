@@ -16,12 +16,17 @@ Routes:
         id: number,
         name: string,
         email: string
-      }
+        userName: string
+        createdAt: string
+    }
     usecase errors:
       status: 400
       body: []
     missing params errors:
       status: 400
+      body: []
+    missing params errors:
+      status: 500
       body: []
 
   Route path: /auth

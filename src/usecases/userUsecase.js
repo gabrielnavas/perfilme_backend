@@ -49,6 +49,13 @@ module.exports = {
         email, 
         password: await hash(password)
       })
-    return resultCreate(errors, userCreated)
+    return resultCreate(errors, {
+      id: userCreated.id,
+      name: userCreated.name, 
+      email: userCreated.email, 
+      userName: userCreated.userName,
+      createdAt: userCreated.createdAt,
+      password: userCreated.password,
+    })
   }
 }

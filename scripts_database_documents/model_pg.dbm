@@ -23,12 +23,12 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<role name="postgres"/>
 </sequence>
 
-<table name="user" layer="0" collapse-mode="2" max-obj-count="8" z-value="0">
+<table name="user" layer="0" collapse-mode="2" max-obj-count="10" z-value="0">
 	<schema name="perfilme"/>
 	<role name="postgres"/>
 	<position x="96" y="136"/>
-	<column name="id" not-null="true" sequence="public.user_id_seq">
-		<type name="integer" length="0"/>
+	<column name="id" not-null="true">
+		<type name="serial" length="0"/>
 	</column>
 	<column name="name" not-null="true">
 		<type name="character varying" length="80"/>
@@ -48,6 +48,12 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<column name="username" not-null="true">
 		<type name="varchar" length="60"/>
 	</column>
+	<column name="created_at" not-null="true">
+		<type name="timestamp" length="0"/>
+	</column>
+	<column name="update_at">
+		<type name="timestamp" length="0"/>
+	</column>
 	<constraint name="user_pk" type="pk-constr" table="perfilme.&quot;user&quot;">
 		<columns names="id" ref-type="src-columns"/>
 	</constraint>
@@ -61,9 +67,9 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <table name="links" layer="0" collapse-mode="2" max-obj-count="4" z-value="0">
 	<schema name="perfilme"/>
 	<role name="postgres"/>
-	<position x="530.336" y="257"/>
-	<column name="id" not-null="true" sequence="public.links_id_seq">
-		<type name="integer" length="0"/>
+	<position x="529.336" y="257"/>
+	<column name="id" not-null="true">
+		<type name="serial" length="0"/>
 	</column>
 	<column name="custom_name" not-null="true">
 		<type name="character varying" length="0"/>
@@ -88,8 +94,8 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	<schema name="perfilme"/>
 	<role name="postgres"/>
 	<position x="954.142" y="137"/>
-	<column name="code" not-null="true" sequence="public.type_link_code_seq">
-		<type name="integer" length="0"/>
+	<column name="code" not-null="true">
+		<type name="serial" length="0"/>
 	</column>
 	<column name="name" not-null="true">
 		<type name="character varying" length="0"/>
