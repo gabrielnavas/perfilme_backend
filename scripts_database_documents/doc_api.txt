@@ -48,3 +48,6 @@ Routes:
     missing params errors:
       status: 400
       body: []
+    missing params errors:
+      status: 500
+      body: []

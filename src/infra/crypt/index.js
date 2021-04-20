@@ -3,7 +3,7 @@ const env = require('../../env')
 
 const createToken = param => {
   return jwt.sign(param, env.auth.privateKey, {
-    expiresIn: '7d'
+    expiresIn: 1,
   })
 }
 

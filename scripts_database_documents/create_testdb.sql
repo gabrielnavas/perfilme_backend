@@ -127,8 +127,9 @@ CREATE TABLE perfilme.authentication_token (
 	id serial NOT NULL,
 	id_user integer NOT NULL,
 	token varchar NOT NULL,
+	created_at timestamp NOT NULL,
+	invalidated_at timestamp,
 	CONSTRAINT authentication_token_pk PRIMARY KEY (id)
-
 );
 -- ddl-end --
 ALTER TABLE perfilme.authentication_token OWNER TO postgres;
