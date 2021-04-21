@@ -86,6 +86,7 @@ CREATE TABLE perfilme.links (
 	custom_name character varying NOT NULL,
 	code_type_link integer NOT NULL,
 	id_user integer NOT NULL,
+	link varchar(400) NOT NULL,
 	CONSTRAINT links_pk PRIMARY KEY (id)
 
 );
@@ -113,27 +114,11 @@ ALTER SEQUENCE perfilme.type_link_code_seq OWNER TO postgres;
 CREATE TABLE perfilme.type_link (
 	code integer NOT NULL DEFAULT nextval('perfilme.type_link_code_seq'::regclass),
 	name character varying NOT NULL,
-	link character varying NOT NULL,
 	CONSTRAINT type_link_pk PRIMARY KEY (code)
 
 );
 -- ddl-end --
 ALTER TABLE perfilme.type_link OWNER TO postgres;
--- ddl-end --
-
--- object: perfilme.authentication_token_id_seq | type: SEQUENCE --
--- DROP SEQUENCE IF EXISTS perfilme.authentication_token_id_seq CASCADE;
-CREATE SEQUENCE perfilme.authentication_token_id_seq
-	INCREMENT BY 1
-	MINVALUE 1
-	MAXVALUE 2147483647
-	START WITH 1
-	CACHE 1
-	NO CYCLE
-	OWNED BY NONE;
-
--- ddl-end --
-ALTER SEQUENCE perfilme.authentication_token_id_seq OWNER TO postgres;
 -- ddl-end --
 
 -- object: type_link_fk | type: CONSTRAINT --
