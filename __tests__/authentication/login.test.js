@@ -2,7 +2,7 @@ const supertest = require('supertest')
 const app = require('../../src/app')
 const { clientConnection } = require('../../src/infra/db/connection')
 const userRepository = require('../../src/infra/db/userRepository')
-
+const jwt = require('jsonwebtoken')
 
 const deleteAuthsAndUsers = async clientConnection => {
   await Promise.all([
@@ -11,7 +11,33 @@ const deleteAuthsAndUsers = async clientConnection => {
   ])
 }
 
-describe('Check usecase errors, returning status 400 and erros list', () => {
+describe('Step 01: Check body missing params errors, returning status 400 and erros list', () => {
+  let request
+  
+  beforeAll(async () => {
+    request = supertest(app)
+  })
+
+  test('should return errors if email is wrong', async () => {
+    const params = {
+      password: '123456'
+    }
+    const response = await request.post('/auth').send(params)
+    expect(response.status).toEqual(400)
+    expect(response.body).toEqual(['missing param: email'])
+  })
+
+  test('should return an error if password length is small', async () => {
+    const params = {
+      email: 'any_wrong_email@email.com',
+    }
+    const response = await request.post('/auth').send(params)
+    expect(response.status).toEqual(400)
+    expect(response.body).toEqual(['missing param: password'])
+  })
+})
+
+describe('Step 02: Check usecase errors, returning status 400 and erros list', () => {
   let request
   
   beforeAll(async () => {
@@ -68,81 +94,31 @@ describe('Check usecase errors, returning status 400 and erros list', () => {
   })
 })
 
-describe('Create a token with email and password', () => {
+describe('Step 03: Create a token valid if dont have', () => {
   let request
-  let userCreated
-  let firstToken
 
   beforeAll(async () => {
     request = supertest(app)
-    await deleteAuthsAndUsers(clientConnection)
-    userCreated = await userRepository.insert({
-      email: 'any_email@email.com',
-      password: '123456',
-      name: 'any_name'
-    })
   })
 
   afterAll(async () => {
     await deleteAuthsAndUsers(clientConnection)
   })
 
-  test('should return status 201 and a token', async () => {
+  test('should return a token valid from database', async () => {
+    await deleteAuthsAndUsers(clientConnection)
+    const userCreated = await userRepository.insert({
+      email: 'any_email@email.com',
+      password: '123456',
+      name: 'any_name'
+    })
     const params = {
       email: userCreated.email,
       password: userCreated.password
     }
-    const response = await request.post('/auth').send(params)
-    firstToken = response.body.token
-    expect(typeof response.body.token).toEqual('string')
-    expect(response.body.token.length).toBeGreaterThan(0)
-  })
-
-  //esta criando tokens duplicados, é preciso invalidaar talvez?
-  test('should invalidate the last token on login', async () => {
-    const params = {
-      email: userCreated.email,
-      password: userCreated.password
-    }
-    await request.post('/auth').send(params)
-    const resultValidTokensFromUser = await clientConnection.many(`
-      SELECT 
-        token, created_at, invalidated_at 
-      FROM 
-        perfilme.authentication_token
-      WHERE 
-        id_user = $1 and
-        token = $2;
-    `, [userCreated.id, firstToken])
-    expect(resultValidTokensFromUser[1]).toEqual('')
-    expect(resultValidTokensFromUser.length).toEqual(1)
-    // expect(new Date(resultValidTokensFromUser[0].created_at).getTime()).toBeGreaterThan(0)
-    // expect(new Date(resultValidTokensFromUser[0].invalidated_at).getTime()).toBeGreaterThan(0)
-  })
-})
-
-describe('Check body missing params errors, returning status 400 and erros list', () => {
-  let request
-  
-  beforeAll(async () => {
-    request = supertest(app)
-  })
-
-  test('should return errors if email is wrong', async () => {
-    const params = {
-      password: '123456'
-    }
-    const response = await request.post('/auth').send(params)
-    expect(response.status).toEqual(400)
-    expect(response.body).toEqual(['missing param: email'])
-  })
-
-  test('should return an error if password length is small', async () => {
-    const params = {
-      email: 'any_wrong_email@email.com',
-    }
-    const response = await request.post('/auth').send(params)
-    expect(response.status).toEqual(400)
-    expect(response.body).toEqual(['missing param: password'])
+    const responseAuth = await request.post('/auth').send(params)
+    expect(responseAuth.status).toEqual(201)
+    expect(typeof responseAuth.body.token).toEqual('string')
+    expect(responseAuth.body.token.length).toBeGreaterThan(0)
   })
 })

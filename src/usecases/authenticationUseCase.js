@@ -1,10 +1,9 @@
-const { isEmail } = require('../infra/validators')
 const userRepository = require('../infra/db/userRepository')
-const { updateTokenUserRepository } = require('../infra/db/authenticationUserRepository')
+const { isEmail } = require('../infra/validators')
 const { createToken } = require('../infra/crypt')
 
-
-const resultCreateToken = (errors, auth) => ({errors, auth})
+const resultCreateToken = (errors, tokenValid) => 
+  ({ errors, token: tokenValid })
 
 module.exports = {
   createToken: async ({ email='', password='' }) => {
@@ -30,13 +29,7 @@ module.exports = {
     if(errors.length > 0) {
       return resultCreateToken(errors, null)
     }
-    const token = await createToken({ id: userFound.id })
-    console.log(token);
-    await updateTokenUserRepository({
-      tokenAuthValid: token, 
-      userIdToInvalidateToken: userFound.id
-    })
-
-    return resultCreateToken(errors, { token })
+    const tokenValid = createToken({ id: userFound.id })
+    return resultCreateToken(errors, tokenValid)
   }
 }

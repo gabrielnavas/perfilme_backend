@@ -14,21 +14,21 @@ CAUTION: Do not modify this file unless you know what you are doing.
 <schema name="public" layer="0" rect-visible="true" fill-color="#e1e1e1" sql-disabled="true">
 </schema>
 
-<schema name="perfilme" layer="0" rect-visible="true" fill-color="#18ec83">
+<schema name="perfilme" layer="0" rect-visible="true" fill-color="#8ced53">
 	<role name="postgres"/>
 </schema>
 
 <sequence name="user_id_seq" cycle="false" start="1" increment="1" min-value="1" max-value="2147483647" cache="1">
-	<schema name="public"/>
+	<schema name="perfilme"/>
 	<role name="postgres"/>
 </sequence>
 
 <table name="user" layer="0" collapse-mode="2" max-obj-count="10" z-value="0">
 	<schema name="perfilme"/>
 	<role name="postgres"/>
-	<position x="96" y="136"/>
-	<column name="id" not-null="true">
-		<type name="serial" length="0"/>
+	<position x="50" y="50"/>
+	<column name="id" not-null="true" sequence="perfilme.user_id_seq">
+		<type name="integer" length="0"/>
 	</column>
 	<column name="name" not-null="true">
 		<type name="character varying" length="80"/>
@@ -46,7 +46,7 @@ CAUTION: Do not modify this file unless you know what you are doing.
 		<type name="character varying" length="80"/>
 	</column>
 	<column name="username" not-null="true">
-		<type name="varchar" length="60"/>
+		<type name="character varying" length="60"/>
 	</column>
 	<column name="created_at" not-null="true">
 		<type name="timestamp" length="0"/>
@@ -60,16 +60,16 @@ CAUTION: Do not modify this file unless you know what you are doing.
 </table>
 
 <sequence name="links_id_seq" cycle="false" start="1" increment="1" min-value="1" max-value="2147483647" cache="1">
-	<schema name="public"/>
+	<schema name="perfilme"/>
 	<role name="postgres"/>
 </sequence>
 
 <table name="links" layer="0" collapse-mode="2" max-obj-count="4" z-value="0">
 	<schema name="perfilme"/>
 	<role name="postgres"/>
-	<position x="529.336" y="257"/>
-	<column name="id" not-null="true">
-		<type name="serial" length="0"/>
+	<position x="61.336" y="411"/>
+	<column name="id" not-null="true" sequence="perfilme.links_id_seq">
+		<type name="integer" length="0"/>
 	</column>
 	<column name="custom_name" not-null="true">
 		<type name="character varying" length="0"/>
@@ -86,16 +86,16 @@ CAUTION: Do not modify this file unless you know what you are doing.
 </table>
 
 <sequence name="type_link_code_seq" cycle="false" start="1" increment="1" min-value="1" max-value="2147483647" cache="1">
-	<schema name="public"/>
+	<schema name="perfilme"/>
 	<role name="postgres"/>
 </sequence>
 
 <table name="type_link" layer="0" collapse-mode="2" max-obj-count="3" z-value="0">
 	<schema name="perfilme"/>
 	<role name="postgres"/>
-	<position x="954.142" y="137"/>
-	<column name="code" not-null="true">
-		<type name="serial" length="0"/>
+	<position x="485.142" y="438"/>
+	<column name="code" not-null="true" sequence="perfilme.type_link_code_seq">
+		<type name="integer" length="0"/>
 	</column>
 	<column name="name" not-null="true">
 		<type name="character varying" length="0"/>
@@ -108,36 +108,10 @@ CAUTION: Do not modify this file unless you know what you are doing.
 	</constraint>
 </table>
 
-<table name="authentication_token" layer="0" collapse-mode="2" max-obj-count="3" z-value="0">
+<sequence name="authentication_token_id_seq" cycle="false" start="1" increment="1" min-value="1" max-value="2147483647" cache="1">
 	<schema name="perfilme"/>
 	<role name="postgres"/>
-	<position x="101.631" y="435.235"/>
-	<column name="id" not-null="true">
-		<type name="serial" length="0"/>
-	</column>
-	<column name="token" not-null="true">
-		<type name="varchar" length="0"/>
-	</column>
-	<constraint name="authentication_token_pk" type="pk-constr" table="perfilme.authentication_token">
-		<columns names="id" ref-type="src-columns"/>
-	</constraint>
-
-	<customidxs object-type="column">
-		<object name="id_user" index="1"/>
-	</customidxs>
-
-	<customidxs object-type="constraint">
-		<object name="user_fk" index="1"/>
-	</customidxs>
-</table>
-
-<relationship name="user_has_many_authentication_token" type="rel1n" layer="0"
-	 src-col-pattern="{sc}_{st}"
-	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
-	 src-fk-pattern="{st}_fk"
-	 src-table="perfilme.&quot;user&quot;"
-	 dst-table="perfilme.authentication_token"
-	 src-required="true" dst-required="false"/>
+</sequence>
 
 <constraint name="type_link_fk" type="fk-constr" comparison-type="MATCH FULL"
 	 upd-action="CASCADE" del-action="RESTRICT" ref-table="perfilme.type_link" table="perfilme.links">
@@ -152,11 +126,13 @@ CAUTION: Do not modify this file unless you know what you are doing.
 </constraint>
 
 <relationship name="rel_links_type_link" type="relfk" layer="0"
+	 custom-color="#f86939"
 	 src-table="perfilme.links"
 	 dst-table="perfilme.type_link" reference-fk="type_link_fk"
 	 src-required="false" dst-required="true"/>
 
 <relationship name="rel_links_user" type="relfk" layer="0"
+	 custom-color="#491691"
 	 src-table="perfilme.links"
 	 dst-table="perfilme.&quot;user&quot;" reference-fk="user_fk"
 	 src-required="false" dst-required="true"/>

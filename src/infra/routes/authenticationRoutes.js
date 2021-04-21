@@ -9,16 +9,17 @@ route.post('/auth', async (req,res) => {
         return res.status(400).json([`missing param: ${param}`])
       }
     }
-    const {errors, auth} = await authenticationUseCase.createToken({
+    const resultToken = await authenticationUseCase.createToken({
       email: String(req.body.email), 
       password: String(req.body.password),
     })
-    if(errors.length > 0) {
-      return res.status(400).json(errors)
+    if(resultToken.errors.length > 0) {
+      return res.status(400).json(resultToken.errors)
     }
-    res.status(201).json(auth)
+    res.status(201).json({ token: resultToken.token })
   }
   catch(error) {
+    console.log(error)
     res.status(500).json(['server error'])
   }
 })
