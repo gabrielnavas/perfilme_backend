@@ -1,10 +1,8 @@
-const jwt = require('jsonwebtoken')
+import jwt from 'jsonwebtoken'
 const env = require('../../env')
 
-const createToken = param => {
+export const createToken = (param: Object): string => {
   return jwt.sign(param, env.auth.privateKey, {
     expiresIn: '7d'
   })
 }
-
-module.exports = { createToken }
