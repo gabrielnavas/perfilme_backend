@@ -2,14 +2,6 @@ const supertest = require('supertest')
 const app = require('../../src/app')
 const { clientConnection } = require('../../src/infra/db/connection')
 const userRepository = require('../../src/infra/db/userRepository')
-const jwt = require('jsonwebtoken')
-
-const deleteAuthsAndUsers = async clientConnection => {
-  await Promise.all([
-    clientConnection.none('DELETE FROM perfilme.authentication_token;'),
-    clientConnection.none('DELETE FROM perfilme.user;')
-  ])
-}
 
 describe('Step 01: Check body missing params errors, returning status 400 and erros list', () => {
   let request
@@ -41,7 +33,7 @@ describe('Step 02: Check usecase errors, returning status 400 and erros list', (
   let request
   
   beforeAll(async () => {
-    await deleteAuthsAndUsers(clientConnection)
+    await clientConnection.none('DELETE FROM perfilme.user;')
     await userRepository.insert({
       email: 'any_wrong_email@email.com',
       password: '123456',
@@ -102,11 +94,11 @@ describe('Step 03: Create a token valid if dont have', () => {
   })
 
   afterAll(async () => {
-    await deleteAuthsAndUsers(clientConnection)
+    await clientConnection.none('DELETE FROM perfilme.user;')
   })
 
   test('should return a token valid from database', async () => {
-    await deleteAuthsAndUsers(clientConnection)
+    await clientConnection.none('DELETE FROM perfilme.user;')
     const userCreated = await userRepository.insert({
       email: 'any_email@email.com',
       password: '123456',

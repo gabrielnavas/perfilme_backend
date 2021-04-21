@@ -1,26 +1,19 @@
 const supertest = require('supertest')
-const app = require('../../src/app')
 
+const app = require('../../src/app')
 const { clientConnection } = require('../../src/infra/db/connection')
 
-
-const deleteAuthsAndUsers = async clientConnection => {
-  await Promise.all([
-    clientConnection.none('DELETE FROM perfilme.authentication_token;'),
-    clientConnection.none('DELETE FROM perfilme.user;')
-  ])
-}
 
 describe('Create a User', () => {
   let request
 
   beforeEach(async () => {
-    await deleteAuthsAndUsers(clientConnection)
+    await clientConnection.none('DELETE FROM perfilme.user;')
     request = supertest(app)
   })
 
   afterAll(async () => {
-    await deleteAuthsAndUsers(clientConnection)
+    await clientConnection.none('DELETE FROM perfilme.user;')
   })
 
   test('should return 201 and user created', async () => {
@@ -49,12 +42,12 @@ describe('Check usecase errors, returning status 400 and erros list', () => {
   let request
 
   beforeEach(async () => {
-   await deleteAuthsAndUsers(clientConnection)
+   await clientConnection.none('DELETE FROM perfilme.user;')
     request = supertest(app)
   })
 
   afterAll(async () => {
-   await deleteAuthsAndUsers(clientConnection)
+   await clientConnection.none('DELETE FROM perfilme.user;')
   })
 
   test('should error if name is small', async () => {

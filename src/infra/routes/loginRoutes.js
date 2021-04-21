@@ -1,6 +1,6 @@
 const route = require('express').Router()
 
-const authenticationUseCase = require('../../usecases/authenticationUseCase')
+const createTokenUseCase = require('../../usecases/createTokenUseCase')
 
 route.post('/auth', async (req,res) => {
   try {
@@ -9,7 +9,7 @@ route.post('/auth', async (req,res) => {
         return res.status(400).json([`missing param: ${param}`])
       }
     }
-    const resultToken = await authenticationUseCase.createToken({
+    const resultToken = await createTokenUseCase({
       email: String(req.body.email), 
       password: String(req.body.password),
     })
