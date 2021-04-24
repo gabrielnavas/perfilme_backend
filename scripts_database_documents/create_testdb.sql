@@ -83,10 +83,10 @@ ALTER SEQUENCE perfilme.links_id_seq OWNER TO postgres;
 -- DROP TABLE IF EXISTS perfilme.links CASCADE;
 CREATE TABLE perfilme.links (
 	id integer NOT NULL DEFAULT nextval('perfilme.links_id_seq'::regclass),
-	custom_name character varying NOT NULL,
-	code_type_link integer NOT NULL,
+	custom_name character varying(100) NOT NULL,
 	id_user integer NOT NULL,
 	link varchar(400) NOT NULL,
+	photo_url varchar(500) NOT NULL,
 	CONSTRAINT links_pk PRIMARY KEY (id)
 
 );
@@ -107,25 +107,6 @@ CREATE SEQUENCE perfilme.type_link_code_seq
 
 -- ddl-end --
 ALTER SEQUENCE perfilme.type_link_code_seq OWNER TO postgres;
--- ddl-end --
-
--- object: perfilme.type_link | type: TABLE --
--- DROP TABLE IF EXISTS perfilme.type_link CASCADE;
-CREATE TABLE perfilme.type_link (
-	code integer NOT NULL DEFAULT nextval('perfilme.type_link_code_seq'::regclass),
-	name character varying NOT NULL,
-	CONSTRAINT type_link_pk PRIMARY KEY (code)
-
-);
--- ddl-end --
-ALTER TABLE perfilme.type_link OWNER TO postgres;
--- ddl-end --
-
--- object: type_link_fk | type: CONSTRAINT --
--- ALTER TABLE perfilme.links DROP CONSTRAINT IF EXISTS type_link_fk CASCADE;
-ALTER TABLE perfilme.links ADD CONSTRAINT type_link_fk FOREIGN KEY (code_type_link)
-REFERENCES perfilme.type_link (code) MATCH FULL
-ON DELETE RESTRICT ON UPDATE CASCADE;
 -- ddl-end --
 
 -- object: user_fk | type: CONSTRAINT --
